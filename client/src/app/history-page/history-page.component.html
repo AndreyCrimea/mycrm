@@ -1,0 +1,46 @@
+<div class="page-title">
+  <h4>История заказов</h4>
+  <button
+    class="btn btn-small"
+    data-tooltip="Открыть фильтр"
+    data-position="left"
+    (click)="isFilterVisible = !isFilterVisible"
+    [ngClass]="{ active: isFilterVisible, red: isFiltered() }"
+    #tooltip
+  >
+    <i class="material-icons">filter_list</i>
+  </button>
+</div>
+
+<app-history-filter
+  (onFilter)="applyFilter($event)"
+  *ngIf="isFilterVisible"
+></app-history-filter>
+
+<div>
+  <app-history-list [orders]="orders"></app-history-list>
+</div>
+
+<div *ngIf="!reloading; else reloadingBlock">
+  <div *ngIf="orders.length > 0; else emptyBlock">
+    <div *ngIf="!noMoreOrders" class="center mb2">
+      <button
+        (click)="loadMore()"
+        *ngIf="!loading; else loader"
+        class="btn waves-effect grey darken-1 btn-small"
+      >
+        Загрузить еще
+      </button>
+      <ng-template #loader>
+        <app-loader></app-loader>
+      </ng-template>
+    </div>
+  </div>
+  <ng-template #emptyBlock>
+    <div class="center">Заказов нет.</div>
+  </ng-template>
+</div>
+
+<ng-template #reloadingBlock>
+  <app-loader></app-loader>
+</ng-template>
